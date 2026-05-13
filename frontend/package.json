@@ -1,0 +1,10 @@
+{
+  "name": "frontend",
+  "private": true,
+  "scripts": {
+    "dev": "cd my-app && npm run dev",
+    "build": "cd my-app && npm run build",
+    "lint": "cd my-app && npm run lint",
+    "preview": "cd my-app && npm run preview"
+  }
+}
