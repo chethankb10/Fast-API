@@ -5,9 +5,7 @@ services:
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.9
+    pythonVersion: 3.11.9
 
   - type: web
     name: react-frontend
@@ -15,6 +13,4 @@ services:
     rootDir: frontend/my-app
     buildCommand: npm install && npm run build
     startCommand: npm run preview -- --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: NODE_VERSION
-        value: 18
+    nodeVersion: 18
