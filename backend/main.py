@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from itertools import count
+import os
+import re
 
 
 class TodoItem(BaseModel):
@@ -22,17 +24,28 @@ class TodoUpdate(BaseModel):
 
 app = FastAPI(title="Todo List API")
 
+# Build allowed origins
+allowed_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+# Add production URLs from environment or defaults
+render_url = os.getenv("RENDER_URL", "https://*.onrender.com")
+vercel_url = os.getenv("VERCEL_URL")
+
+if render_url and render_url != "https://*.onrender.com":
+    allowed_origins.append(render_url)
+
+if vercel_url:
+    allowed_origins.append(f"https://{vercel_url}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://*.onrender.com",
-        "https://*.vercel.app",
-        "https://*.vercel.dev"
-    ],
+    allow_origin_regex=r"https?://.*\.(onrender|vercel)\.(com|app|dev)|http://localhost.*|http://127\.0\.0\.1.*",
+    allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
